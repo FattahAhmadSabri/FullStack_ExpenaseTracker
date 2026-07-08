@@ -3,21 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Register User</title>
   </head>
+
   <body>
-    <form onclick="handleLogin(event)">
+    <form onsubmit="handleLogin(event)">
       <label>Name :</label>
       <input type="text" id="name" />
+
       <br />
+
       <label>Email :</label>
-      <input type="text" id="email" />
+      <input type="email" id="email" />
+
       <br />
+
       <label>Password :</label>
       <input type="password" id="password" />
+
       <br />
+
       <button type="submit">Submit</button>
     </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

@@ -1,16 +1,19 @@
-const api =""
-const handleLogin = async(event)=>{
-     event.preventDefault(event)
-     const name = document.getElementById("name").value 
-     const email = document.getElementById("email").value 
-     const password = document.getElementById("password").value
+const api = "http://localhost:4000/user";
+const handleLogin = async (event) => {
+  event.preventDefault(event);
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-     try {
-        const response = await axios.post(api,{
-            name,email,password
-        })
-        console.log(response.data)
-     } catch (error) {
-       console.log(error) 
-     }
-}
+  try {
+    const response = await axios.post(api, {
+      name,
+      email,
+      password,
+    });
+    console.log(response.data);
+    event.reset()
+  } catch (error) {
+    console.log(error);
+  }
+};

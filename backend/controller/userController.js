@@ -1,4 +1,4 @@
-const {createUserService} = require("../service/userService")
+const {createUserService, loginService} = require("../service/userService")
 const {
     successResponse,
     errorResponse
@@ -14,4 +14,34 @@ const createUserController =async(req,res)=>{
     }
 }
 
-module.exports= {createUserController}
+const loginController = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const response = await loginService(email, password);
+
+        if (!response) {
+            return errorResponse(
+                res,
+                401,
+                "Invalid email or password"
+            );
+        }
+
+        return successResponse(
+            res,
+            200,
+            "Login successfully",
+            response
+        );
+
+    } catch (error) {
+        return errorResponse(
+            res,
+            500,
+            error.message
+        );
+    }
+};
+
+module.exports= {createUserController, loginController}

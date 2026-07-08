@@ -1,13 +1,10 @@
-const api = "http://localhost:4000/user/register";
+const api = "http://localhost:4000/user/login";
 const handleLogin = async (event) => {
-  event.preventDefault(event);
-  const name = document.getElementById("name").value;
+  event.preventDefault();
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-
   try {
     const response = await axios.post(api, {
-      name,
       email,
       password,
     });
@@ -15,5 +12,15 @@ const handleLogin = async (event) => {
     event.target.reset();
   } catch (error) {
     console.log(error);
+    display(error.response.data.message, error.response.status);
   }
+};
+
+const display = (message, status) => {
+  const ul = document.querySelector("ul");
+  const li = document.createElement("li");
+
+  li.textContent = `${status} - ${message}`;
+
+  ul.appendChild(li);
 };

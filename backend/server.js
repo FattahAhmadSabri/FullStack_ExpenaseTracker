@@ -14,7 +14,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/",userRoutes)
-sequelize.sync({force : true}).then(()=>{
+sequelize.sync().then(()=>{
     app.listen(port,()=>{
     console.log("server connected")
 })

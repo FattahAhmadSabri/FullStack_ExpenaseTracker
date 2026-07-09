@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const sequelize = require("./utils/dbConfig")
 const userRoutes =require("./routes/userRoutes")
+const expenseRoutes =require("./routes/expenseRoutes")
 
 const app = express()
 const port = process.env.PORT || 4000
@@ -14,6 +15,8 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/",userRoutes)
+app.use("/",expenseRoutes)
+
 sequelize.sync().then(()=>{
     app.listen(port,()=>{
     console.log("server connected")

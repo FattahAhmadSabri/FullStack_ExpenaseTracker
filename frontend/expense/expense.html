@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expense Tracker</title>
+  </head>
+  <body>
+    <form onsubmit="handleExpense(event)">
+      <label>Amount :</label>
+      <input type="number" id="amount" />
+      <br />
+      <label>Description :</label>
+      <input type="text" id="description" />
+      <br />
+      <label>Category :</label>
+
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Bills">Bills</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <br />
+      <br />
+      <button type="submit">Submit</button>
+    </form>
+    <ul></ul>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="expense.js"></script>
+  </body>
+</html>

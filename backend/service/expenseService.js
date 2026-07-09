@@ -10,5 +10,10 @@ const getExpenseService =async()=>{
     return result
 }
 
+const deleteExpenseService =async(id)=>{
+    const result = await Expense.destroy({where: {id}})
+    return result
+}
 
-module.exports ={addExpenseService,getExpenseService }
+
+module.exports ={addExpenseService,getExpenseService, deleteExpenseService }

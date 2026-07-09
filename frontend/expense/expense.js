@@ -34,12 +34,24 @@ const display = (data) => {
     const li = document.createElement("li");
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete Button";
+    deleteButton.onclick=()=>{
+      deleteExpense(item.id, li);
+    };
     li.textContent = `${item.amount}   ${item.description}   ${item.category}`;
     li.appendChild(deleteButton);
     ul.appendChild(li);
   });
 };
 
+const deleteExpense = async (id, li) => {
+  try {
+    const response = await axios.delete(`${api}/${id}`);
+    console.log(response);
+    li.remove();
+  } catch (error) {
+    console.log(error);
+  }
+};
 window.onload = async () => {
   const data = await getData();
 

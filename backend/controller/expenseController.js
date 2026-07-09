@@ -1,7 +1,8 @@
-const {addExpenseService, getExpenseService } =require("../service/expenseService")
+const {addExpenseService, getExpenseService,deleteExpenseService } =require("../service/expenseService")
 const {
     successResponse,
-    errorResponse
+    errorResponse,
+    
 } = require("../middleware/responseHandle")
 const createExpenseController = async (req,res)=>{
     try {
@@ -22,4 +23,14 @@ const getExpenseController =async(req,res)=>{
     }
 }
 
-module.exports={createExpenseController, getExpenseController}
+const deleteExpenseController=async (req,res)=>{
+    try {
+        const {id} = req.params
+        const response = await deleteExpenseService(id)
+        return successResponse(res,200, "Expens deleted successfully", response)
+    } catch (error) {
+        return errorResponse(res,500, error.message)
+    }
+}
+
+module.exports={createExpenseController, getExpenseController, deleteExpenseController}

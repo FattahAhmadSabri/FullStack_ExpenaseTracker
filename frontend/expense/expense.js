@@ -5,12 +5,21 @@ const handleExpense = async (event) => {
   const amount = document.getElementById("amount").value;
   const description = document.getElementById("description").value;
   const category = document.getElementById("category").value;
+  const token = localStorage.getItem("token");
   try {
-    const response = await axios.post(`${api}/add`, {
-      amount,
-      description,
-      category,
-    });
+    const response = await axios.post(
+      `${api}/add`,
+      {
+        amount,
+        description,
+        category,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     console.log(response.data);
     display([response.data.data]);
     event.target.reset();
@@ -20,8 +29,13 @@ const handleExpense = async (event) => {
 };
 
 const getData = async () => {
+  const token = localStorage.getItem("token");
   try {
-    const response = await axios.get(api);
+    const response = await axios.get(api, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -34,7 +48,7 @@ const display = (data) => {
     const li = document.createElement("li");
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete Button";
-    deleteButton.onclick=()=>{
+    deleteButton.onclick = () => {
       deleteExpense(item.id, li);
     };
     li.textContent = `${item.amount}   ${item.description}   ${item.category}`;
@@ -44,8 +58,13 @@ const display = (data) => {
 };
 
 const deleteExpense = async (id, li) => {
+  const token = localStorage.getItem("token");
   try {
-    const response = await axios.delete(`${api}/${id}`);
+    const response = await axios.delete(`${api}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(response);
     li.remove();
   } catch (error) {

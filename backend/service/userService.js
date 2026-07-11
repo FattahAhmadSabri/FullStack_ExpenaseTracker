@@ -15,11 +15,22 @@ const loginService = async (email, password) => {
       email,
     },
   });
+
   if (!user) {
     return false;
   }
+
   const comparedPassword = await comparePassword(password, user.password);
-  return comparedPassword;
+
+  if (!comparedPassword) {
+    return false;
+  }
+
+  const data = user.toJSON();
+
+  delete data.password;
+
+  return data;
 };
 
 module.exports = { createUserService, loginService };

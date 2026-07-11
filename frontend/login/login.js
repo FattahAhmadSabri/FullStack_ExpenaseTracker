@@ -8,6 +8,8 @@ const handleLogin = async (event) => {
       email,
       password,
     });
+    const token = response.data.token;
+    localStorage.setItem("token", token);
     console.log(response.data);
     event.target.reset();
   } catch (error) {

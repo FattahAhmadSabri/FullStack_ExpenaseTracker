@@ -5,6 +5,7 @@ dotenv.config();
 const sequelize = require("./utils/dbConfig");
 const userRoutes = require("./routes/userRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
+const paymentsRoutes = require("./routes/paymetsRoute");
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
+app.use("/", paymentsRoutes);
 
 sequelize
   .sync()

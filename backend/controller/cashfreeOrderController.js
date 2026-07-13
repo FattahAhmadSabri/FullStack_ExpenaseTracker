@@ -6,8 +6,9 @@ const {
 
 const cashfreeOrderController =async (req,res)=>{
    try {
-    console.log("Request Body:", req.body);
-     const { orderId, orderAmount, customerId, customerPhone } = req.body;
+    const customerId = req.user.id
+    const orderId = Date.now() +"-" +Math.random()
+     const { orderAmount, customerPhone } = req.body;
    const order = await createOrder(orderId, orderAmount, customerId, customerPhone)
    return successResponse(res, 201, "payment successfully", order);
    } catch (error) {

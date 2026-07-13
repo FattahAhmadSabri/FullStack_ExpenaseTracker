@@ -4,8 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
+    <style>
+      .top-right {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
+    <button class="top-right" onclick="handlepayments()" type="button">
+      Buy Membership
+    </button>
     <form onsubmit="handleExpense(event)">
       <label>Amount :</label>
       <input type="number" id="amount" />

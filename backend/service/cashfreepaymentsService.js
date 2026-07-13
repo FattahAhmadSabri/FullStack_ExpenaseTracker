@@ -3,20 +3,19 @@ const { Cashfree, CFEnvironment } = require("cashfree-pg");
 const cashfree = new Cashfree(
   CFEnvironment.SANDBOX,
   process.env.CASHFREE_CLIENT_ID,
-  process.env.CASHFREE_CLIENT_SECRET
+  process.env.CASHFREE_CLIENT_SECRET,
 );
 
- const createOrder = async (
+const createOrder = async (
   orderId,
   orderAmount,
   customerId,
   customerPhone,
-  orderCurrency = "INR"
+  orderCurrency = "INR",
 ) => {
   try {
-    
     const expiryDate = new Date(Date.now() + 60 * 60 * 1000);
-    
+
     const request = {
       order_id: orderId,
       order_amount: orderAmount,
@@ -28,10 +27,8 @@ const cashfree = new Cashfree(
       },
 
       order_meta: {
-        return_url:
-          "http://localhost:5173/payment-success?order_id={order_id}",
-        notify_url:
-          "http://localhost:4000/api/payment/webhook",
+        return_url: "http://localhost:5173/payment-success?order_id={order_id}",
+        notify_url: "http://localhost:4000/api/payment/webhook",
         payment_methods: "cc,dc,upi",
       },
 
@@ -42,15 +39,13 @@ const cashfree = new Cashfree(
 
     return response.data;
   } catch (error) {
-    console.error(
-      "Cashfree Error:",
-      error.response?.data || error.message
-    );
+    console.error("Cashfree Error:", error.response?.data || error.message);
 
     throw new Error(
-      error.response?.data?.message || "Failed to create Cashfree order."
+      error.response?.data?.message || "Failed to create Cashfree order.",
     );
   }
 };
 
-module.exports =createOrder
+
+module.exports = createOrder;

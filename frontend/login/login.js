@@ -12,6 +12,7 @@ const handleLogin = async (event) => {
     localStorage.setItem("token", token);
     console.log(response.data);
     event.target.reset();
+    window.location.href = "../Expense/expense.html";
   } catch (error) {
     console.log(error);
     display(error.response.data.message, error.response.status);

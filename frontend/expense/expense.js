@@ -71,6 +71,10 @@ const deleteExpense = async (id, li) => {
     console.log(error);
   }
 };
+
+const handlepayments = () => {
+  return (window.location.href = "../payments/payments.html");
+};
 window.onload = async () => {
   const data = await getData();
 

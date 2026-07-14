@@ -2,6 +2,7 @@ const {
   addExpenseService,
   getExpenseService,
   deleteExpenseService,
+  getExpenseByAllName 
 } = require("../service/expenseService");
 
 const {
@@ -33,6 +34,15 @@ const getExpenseController = async (req, res) => {
   }
 };
 
+const getAllExpenseGroupByUserController = async (req, res) => {
+  try {
+    const response = await  getExpenseByAllName();
+    return successResponse(res, 200, "amount listed successfully", response);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
+
 const deleteExpenseController = async (req, res) => {
   try {
     const { id } = req.params;
@@ -48,4 +58,5 @@ module.exports = {
   createExpenseController,
   getExpenseController,
   deleteExpenseController,
+  getAllExpenseGroupByUserController
 };

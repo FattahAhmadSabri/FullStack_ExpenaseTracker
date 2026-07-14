@@ -57,6 +57,36 @@ const display = (data) => {
   });
 };
 
+const getPremiumData = async () => {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await axios.get(`${api}/premium`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+const getpremiumDisplay = (data) => {
+  const leaderboard = document.getElementById("leaderboard");
+  leaderboard.innerHTML = "";
+
+  data.forEach((item) => {
+    const li = document.createElement("li");
+
+    li.textContent = `Name: ${item.name} - Total Expense- ${item.totalAmount}`;
+
+    leaderboard.appendChild(li);
+  });
+};
+
 const deleteExpense = async (id, li) => {
   const token = localStorage.getItem("token");
   try {
@@ -76,7 +106,9 @@ const handlepayments = () => {
   return (window.location.href = "../payments/payments.html");
 };
 window.onload = async () => {
-  const data = await getData();
+  const expenses = await getData();
+  display(expenses);
 
-  display(data);
+  const premiumData = await getPremiumData();
+  getpremiumDisplay(premiumData);
 };

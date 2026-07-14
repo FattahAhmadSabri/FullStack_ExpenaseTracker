@@ -87,6 +87,11 @@ const getpremiumDisplay = (data) => {
   });
 };
 
+const handleLeaderboard = async () => {
+  const data = await getPremiumData();
+  getpremiumDisplay(data);
+};
+
 const deleteExpense = async (id, li) => {
   const token = localStorage.getItem("token");
   try {
@@ -108,7 +113,4 @@ const handlepayments = () => {
 window.onload = async () => {
   const expenses = await getData();
   display(expenses);
-
-  const premiumData = await getPremiumData();
-  getpremiumDisplay(premiumData);
 };

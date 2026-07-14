@@ -29,6 +29,7 @@ const getExpenseByAllName = async () => {
       },
     ],
     group: ["User.id", "User.name"],
+    order: [[fn("SUM", col("amount")), "DESC"]],
   });
 
   return result;

@@ -13,7 +13,6 @@ const createExpenseController = async (req, res) => {
   try {
     const { amount, description, category } = req.body;
     const userId = req.user.id;
-    const totalExpense = req.user.totalExpense +amount
     const response = await addExpenseService(
       amount,
       description,

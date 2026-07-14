@@ -81,7 +81,7 @@ const getpremiumDisplay = (data) => {
   data.forEach((item) => {
     const li = document.createElement("li");
 
-    li.textContent = `Name: ${item.name} - Total Expense- ${item.totalAmount}`;
+    li.textContent = `Name: ${item.name} - Total Expense- ${item.totalExpense}`;
 
     leaderboard.appendChild(li);
   });

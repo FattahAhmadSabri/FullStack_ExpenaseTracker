@@ -27,7 +27,8 @@ const createOrder = async (
       },
 
       order_meta: {
-        return_url: "http://localhost:5173/payment-success?order_id={order_id}",
+        return_url:
+          "http://localhost:5500/frontend/payments/payment-success.html?order_id={order_id}",
         notify_url: "http://localhost:4000/api/payment/webhook",
         payment_methods: "cc,dc,upi",
       },
@@ -47,5 +48,32 @@ const createOrder = async (
   }
 };
 
+const getOrderStatus = async (orderId) => {
+  try {
+    const response = await cashfree.PGOrderFetchPayments(orderId);
 
-module.exports = createOrder;
+    const payments = response.data;
+
+    let orderStatus;
+
+    if (payments.some((payment) => payment.payment_status === "SUCCESS")) {
+      orderStatus = "Success";
+    } else if (
+      payments.some((payment) => payment.payment_status === "PENDING")
+    ) {
+      orderStatus = "Pending";
+    } else {
+      orderStatus = "Failure";
+    }
+
+    return {
+      orderStatus,
+      payments,
+    };
+  } catch (error) {
+    console.error("Cashfree Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+module.exports = { createOrder, getOrderStatus };

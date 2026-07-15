@@ -1,20 +1,38 @@
-const createOrder = require("../service/cashfreepaymentsService")
+const {
+  createOrder,
+  getOrderStatus,
+} = require("../service/cashfreepaymentsService");
 const {
   successResponse,
   errorResponse,
 } = require("../middleware/responseHandle");
+const { randomUUID } = require("crypto");     
 
-const cashfreeOrderController =async (req,res)=>{
-   try {
-    const customerId = req.user.id
-    const orderId = Date.now() +"-" +Math.random()
-     const { orderAmount, customerPhone } = req.body;
-   const order = await createOrder(orderId, orderAmount, customerId, customerPhone)
-   return successResponse(res, 201, "payment successfully", order);
-   } catch (error) {
+const cashfreeOrderController = async (req, res) => {
+  try {
+    const customerId = req.user.id;
+    const orderId = randomUUID();
+    const { orderAmount, customerPhone } = req.body;
+    const order = await createOrder(
+      orderId,
+      orderAmount,
+      customerId,
+      customerPhone,
+    );
+    return successResponse(res, 201, "payment genarated", order);
+  } catch (error) {
     return errorResponse(res, 500, error.message);
-   }
+  }
+};
 
-}
+const getOrderStatusCashfreeController = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const response = await getOrderStatus(orderId);
+    return successResponse(res, 201, "payment successfully", order);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+};
 
-module.exports={cashfreeOrderController}
+module.exports = { cashfreeOrderController, getOrderStatusCashfreeController };

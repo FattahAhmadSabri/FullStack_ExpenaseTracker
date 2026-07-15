@@ -6,6 +6,11 @@ node_modules/
 .env.*
 !.env.example
 
+backend/node_modules/
+backend/.env
+
+frontend/node_modules/
+frontend/.env
 # Logs
 logs/
 *.log

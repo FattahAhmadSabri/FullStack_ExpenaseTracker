@@ -4,7 +4,6 @@ const handleExpense = async (event) => {
   event.preventDefault();
   const amount = document.getElementById("amount").value;
   const description = document.getElementById("description").value;
-  const category = document.getElementById("category").value;
   const token = localStorage.getItem("token");
   try {
     const response = await axios.post(
@@ -12,7 +11,6 @@ const handleExpense = async (event) => {
       {
         amount,
         description,
-        category,
       },
       {
         headers: {
@@ -51,7 +49,7 @@ const display = (data) => {
     deleteButton.onclick = () => {
       deleteExpense(item.id, li);
     };
-    li.textContent = `${item.amount}   ${item.description}   ${item.category}`;
+    li.textContent = `${item.amount} -  ${item.description} - ${item.category} - `;
     li.appendChild(deleteButton);
     ul.appendChild(li);
   });

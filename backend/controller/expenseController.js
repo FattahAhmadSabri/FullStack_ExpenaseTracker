@@ -11,14 +11,9 @@ const {
 } = require("../middleware/responseHandle");
 const createExpenseController = async (req, res) => {
   try {
-    const { amount, description, category } = req.body;
+    const { amount, description } = req.body;
     const userId = req.user.id;
-    const response = await addExpenseService(
-      amount,
-      description,
-      category,
-      userId,
-    );
+    const response = await addExpenseService(amount, description, userId);
     return successResponse(res, 201, "amount added successfully", response);
   } catch (error) {
     return errorResponse(res, 500, error.message);

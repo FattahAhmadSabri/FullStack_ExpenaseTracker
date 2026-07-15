@@ -1,16 +1,32 @@
 const { Expense, User } = require("../model/index");
 const { fn, col } = require("sequelize");
 const sequelize = require("../utils/dbConfig");
+const {GoogleGenAI} = require("@google/genai")
+   const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
-const addExpenseService = async (amount, description, category, userId) => {
+const addExpenseService = async (amount, description, userId) => {
   const transaction = await sequelize.transaction();
 
   try {
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: `Classify this expense description into exactly one word: "${description}"`,
+          config: {
+            systemInstruction: "You are an expense categorization system. Return exactly ONE word representing the category (e.g., Food, Transport, Utilities, Medical, Entertainment). Do not include periods or extra text. If it cannot be categorized, return 'Other'.",
+            safetySettings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' }
+            ]
+          }
+    });
     const expense = await Expense.create(
       {
         amount,
         description,
-        category,
+        category: response.text,
         userId,
       },
       { transaction },

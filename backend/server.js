@@ -8,7 +8,6 @@ const expenseRoutes = require("./routes/expenseRoutes");
 const paymentsRoutes = require("./routes/paymetsRoute");
 const emailRoutes = require("./routes/emailRoutes");
 
-
 const app = express();
 const port = process.env.PORT || 4000;
 app.use(express.json());
@@ -21,7 +20,7 @@ app.get("/", (req, res) => {
 app.use("/", userRoutes);
 app.use("/", expenseRoutes);
 app.use("/", paymentsRoutes);
-app.use("/",emailRoutes);
+app.use("/", emailRoutes);
 
 sequelize
   .sync()

@@ -1,4 +1,4 @@
-const { createUserService, loginService, forgotPasswordService } = require("../service/userService");
+const { createUserService, loginService, forgotPasswordService, updePasswordService } = require("../service/userService");
 const { generateToken, verifyToken } = require("../utils/jwtConfig");
 const {
   successResponse,
@@ -42,4 +42,14 @@ const forgotPasswordController =async (req,res)=>{
 
 }
 
-module.exports = { createUserController, loginController ,forgotPasswordController};
+
+const updatePasswordContoller =async (req,res)=>{
+    try {
+      const {userId, email} = req.body
+      const response =  await updePasswordService(userId, email)
+    } catch (error) {
+      
+    }
+}
+
+module.exports = { createUserController, loginController ,forgotPasswordController, updatePasswordContoller};

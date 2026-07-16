@@ -1,8 +1,8 @@
 const User = require("../model/userSchema");
-const {ForgotPassword} = require("../model/index")
+const { ForgotPassword } = require("../model/index");
 const { hashPassword, comparePassword } = require("../middleware/bcryptConfig");
-const sendEmail = require("./emailService")
-const sequelize =require("../utils/dbConfig")
+const sendEmail = require("./emailService");
+const sequelize = require("../utils/dbConfig");
 
 const createUserService = async (name, email, password) => {
   const hashedPassword = await hashPassword(password);
@@ -36,7 +36,6 @@ const loginService = async (email, password) => {
   return data;
 };
 
-
 const forgotPasswordService = async (email) => {
   const transaction = await sequelize.transaction();
 
@@ -59,7 +58,7 @@ const forgotPasswordService = async (email) => {
           isActive: true,
         },
         transaction,
-      }
+      },
     );
 
     const resetRequest = await ForgotPassword.create(
@@ -68,7 +67,7 @@ const forgotPasswordService = async (email) => {
         isActive: true,
         expiresAt: new Date(Date.now() + 30 * 60 * 1000),
       },
-      { transaction }
+      { transaction },
     );
 
     await transaction.commit();
@@ -77,10 +76,10 @@ const forgotPasswordService = async (email) => {
       user.email,
       "Reset Password",
       `
-      <a href="http://localhost:4000/user/password/reset/${resetRequest.id}">
-        Reset Password
-      </a>
-      `
+      <a href="http://localhost:5500/frontend/login/reset-password.html?id=${resetRequest.id}">
+    Reset Password
+</a>
+      `,
     );
 
     return true;
@@ -90,13 +89,55 @@ const forgotPasswordService = async (email) => {
   }
 };
 
-const updePasswordService =async (userId,password)=>{
-  const hashedPassword = await hashPassword(password);
-      const updatedPassword = User.update({password : hashedPassword},{
-        where : {useId}
-      })
-      return true
-}
+const updatePasswordService = async (resetId, password) => {
+  const transaction = await sequelize.transaction();
 
+  try {
+    const resetRequest = await ForgotPassword.findByPk(resetId, {
+      transaction,
+    });
+      console.log("Reset Request:", resetRequest?.toJSON());
+    if (!resetRequest) {
+      throw new Error("Invalid reset link");
+    }
 
-module.exports = { createUserService, loginService, forgotPasswordService, updePasswordService };
+    if (!resetRequest.isActive) {
+      throw new Error("Reset link has already been used");
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    await User.update(
+      { password: hashedPassword },
+      {
+        where: {
+          id: resetRequest.userId,
+        },
+        transaction,
+      }
+    );
+
+    await resetRequest.update(
+      {
+        isActive: false,
+      },
+      {
+        transaction,
+      }
+    );
+
+    await transaction.commit();
+
+    return true;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
+
+module.exports = {
+  createUserService,
+  loginService,
+  forgotPasswordService,
+ updatePasswordService,
+};

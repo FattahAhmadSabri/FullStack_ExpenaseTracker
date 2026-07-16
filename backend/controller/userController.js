@@ -1,4 +1,4 @@
-const { createUserService, loginService, forgotPasswordService, updePasswordService } = require("../service/userService");
+const { createUserService, loginService, forgotPasswordService, updatePasswordService } = require("../service/userService");
 const { generateToken, verifyToken } = require("../utils/jwtConfig");
 const {
   successResponse,
@@ -31,6 +31,7 @@ const loginController = async (req, res) => {
   }
 };
 
+
 const forgotPasswordController =async (req,res)=>{
   try {
     const {email} = req.body
@@ -43,13 +44,23 @@ const forgotPasswordController =async (req,res)=>{
 }
 
 
-const updatePasswordContoller =async (req,res)=>{
-    try {
-      const {userId, email} = req.body
-      const response =  await updePasswordService(userId, email)
-    } catch (error) {
-      
-    }
-}
+const updatePasswordController = async (req, res) => {
+  try {
+    const { id } = req.params;          // ForgotPassword table ID
+    const { password } = req.body;
 
-module.exports = { createUserController, loginController ,forgotPasswordController, updatePasswordContoller};
+    const response = await updatePasswordService(id, password);
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { createUserController, loginController ,forgotPasswordController, updatePasswordController };

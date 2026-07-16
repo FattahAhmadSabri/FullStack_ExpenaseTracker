@@ -1,4 +1,4 @@
-const { createUserService, loginService } = require("../service/userService");
+const { createUserService, loginService, forgotPasswordService } = require("../service/userService");
 const { generateToken, verifyToken } = require("../utils/jwtConfig");
 const {
   successResponse,
@@ -31,4 +31,15 @@ const loginController = async (req, res) => {
   }
 };
 
-module.exports = { createUserController, loginController };
+const forgotPasswordController =async (req,res)=>{
+  try {
+    const {email} = req.body
+    const response = await forgotPasswordService(email)
+    return successResponse(res, 200, "Email sent successfully", response);
+  } catch (error) {
+    return errorResponse(res, 500, error.message);
+  }
+
+}
+
+module.exports = { createUserController, loginController ,forgotPasswordController};

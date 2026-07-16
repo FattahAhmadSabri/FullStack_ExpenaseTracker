@@ -1,5 +1,6 @@
 const User = require("../model/userSchema");
 const { hashPassword, comparePassword } = require("../middleware/bcryptConfig");
+const sendEmail = require("./emailService")
 
 const createUserService = async (name, email, password) => {
   const hashedPassword = await hashPassword(password);
@@ -33,4 +34,24 @@ const loginService = async (email, password) => {
   return data;
 };
 
-module.exports = { createUserService, loginService };
+
+const forgotPasswordService = async (email) => {
+  const matchEmail = await User.findOne({
+    where: { email },
+  });
+
+  if (!matchEmail) {
+    return false;
+  }
+
+  await sendEmail(
+    matchEmail.email,
+    "OTP for Email Verification",
+    "<h1>110011</h1>"
+  );
+
+  return true;
+};
+
+
+module.exports = { createUserService, loginService, forgotPasswordService };

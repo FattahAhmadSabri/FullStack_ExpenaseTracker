@@ -108,6 +108,10 @@ const deleteExpense = async (id, li) => {
 const handlepayments = () => {
   return (window.location.href = "../payments/payments.html");
 };
+const handleDayByDayExpenses = () => {
+  return (window.location.href = "./dayByDayExpense.html");
+};
+
 window.onload = async () => {
   const expenses = await getData();
   display(expenses);

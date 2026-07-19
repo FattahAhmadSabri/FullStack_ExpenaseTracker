@@ -1,18 +1,38 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Payment Success</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Status</title>
+
+    <link rel="stylesheet" href="payment-success.css" />
   </head>
   <body>
-    <h2>Payment Successful</h2>
+    <div class="container">
+      <div class="success-icon">✓</div>
 
-    <p id="orderId"></p>
+      <h1>Payment Successful</h1>
 
-    <script>
-      const params = new URLSearchParams(window.location.search);
-      const orderId = params.get("order_id");
+      <p class="subtitle">Thank you for purchasing Premium Membership.</p>
 
-      document.getElementById("orderId").innerText = "Order ID: " + orderId;
-    </script>
+      <div class="details">
+        <div class="row">
+          <span>Order ID</span>
+          <p id="orderId">Loading...</p>
+        </div>
+
+        <div class="row">
+          <span>Status</span>
+          <p id="status">Checking payment status...</p>
+        </div>
+      </div>
+
+      <button onclick="window.location.href = '../expense/expense.html'">
+        Go to Dashboard
+      </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="payment-success.js"></script>
   </body>
 </html>

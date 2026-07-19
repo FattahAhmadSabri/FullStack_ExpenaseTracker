@@ -1,4 +1,6 @@
 const { Cashfree, CFEnvironment } = require("cashfree-pg");
+const { User, Payment } = require("../model/index");
+const sequelize = require("../utils/dbConfig");
 
 const cashfree = new Cashfree(
   CFEnvironment.SANDBOX,
@@ -37,7 +39,12 @@ const createOrder = async (
     };
 
     const response = await cashfree.PGCreateOrder(request);
-
+    await Payment.create({
+      orderId,
+      userId: customerId,
+      amount: orderAmount,
+      status: "Pending",
+    });
     return response.data;
   } catch (error) {
     console.error("Cashfree Error:", error.response?.data || error.message);
@@ -49,15 +56,48 @@ const createOrder = async (
 };
 
 const getOrderStatus = async (orderId) => {
+  const transaction = await sequelize.transaction();
+
   try {
     const response = await cashfree.PGOrderFetchPayments(orderId);
-
     const payments = response.data;
 
     let orderStatus;
 
-    if (payments.some((payment) => payment.payment_status === "SUCCESS")) {
+    const successfulPayment = payments.find(
+      (payment) => payment.payment_status === "SUCCESS",
+    );
+
+    if (successfulPayment) {
       orderStatus = "Success";
+
+      const paymentRecord = await Payment.findOne({
+        where: { orderId },
+        transaction,
+      });
+
+      if (paymentRecord && paymentRecord.status !== "Success") {
+        await Payment.update(
+          {
+            status: "Success",
+            paymentId: successfulPayment.cf_payment_id,
+          },
+          {
+            where: { orderId },
+            transaction,
+          },
+        );
+
+        await User.update(
+          { isPremium: true },
+          {
+            where: {
+              id: paymentRecord.userId,
+            },
+            transaction,
+          },
+        );
+      }
     } else if (
       payments.some((payment) => payment.payment_status === "PENDING")
     ) {
@@ -66,14 +106,16 @@ const getOrderStatus = async (orderId) => {
       orderStatus = "Failure";
     }
 
+    await transaction.commit();
+
     return {
       orderStatus,
       payments,
     };
   } catch (error) {
+    await transaction.rollback();
     console.error("Cashfree Error:", error.response?.data || error.message);
     throw error;
   }
 };
-
 module.exports = { createOrder, getOrderStatus };

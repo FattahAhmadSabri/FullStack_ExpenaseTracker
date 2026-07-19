@@ -29,8 +29,13 @@ const getOrderStatusCashfreeController = async (req, res) => {
   try {
     const { orderId } = req.params;
     const response = await getOrderStatus(orderId);
-    return successResponse(res, 201, "payment successfully", order);
+    return successResponse(res, 201, "payment successfully", response);
   } catch (error) {
+     console.log(error);
+  console.log(error.name);
+  console.log(error.message);
+
+  
     return errorResponse(res, 500, error.message);
   }
 };

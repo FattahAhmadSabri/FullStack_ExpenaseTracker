@@ -55,9 +55,32 @@ const addExpenseService = async (amount, description, userId) => {
   }
 };
 
-const getExpenseService = async () => {
-  const result = await Expense.findAll();
-  return result;
+const getExpenseService = async (page, limit) => {
+  page = Number(page) || 1;
+  limit = Number(limit) || 5;
+
+  const offset = (page - 1) * limit;
+
+  const result = await Expense.findAndCountAll({
+    limit,
+    offset,
+    order: [["createdAt", "DESC"]],
+  });
+
+  const totalPages = Math.ceil(result.count / limit);
+
+  return {
+    expenses: result.rows,   // Actual expense records
+    pagination: {
+      currentPage: page,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+      nextPage: page < totalPages ? page + 1 : null,
+      previousPage: page > 1 ? page - 1 : null,
+      totalItems: result.count,
+    },
+  };
 };
 
 const getExpenseByAllName = async (userId) => {

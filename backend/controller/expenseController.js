@@ -26,7 +26,9 @@ const createExpenseController = async (req, res) => {
 
 const getExpenseController = async (req, res) => {
   try {
-    const response = await getExpenseService();
+    const {page,limits} = req.query
+    
+    const response = await getExpenseService(page,limits);
     return successResponse(res, 200, "amount listed successfully", response);
   } catch (error) {
     return errorResponse(res, 500, error.message);

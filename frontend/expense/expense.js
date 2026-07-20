@@ -26,14 +26,21 @@ const handleExpense = async (event) => {
   }
 };
 
-const getData = async () => {
+let currentPage = 1;
+const limit = 5;
+
+const getData = async (page = currentPage) => {
   const token = localStorage.getItem("token");
+
   try {
-    const response = await axios.get(api, {
+    const response = await axios.get(`${api}?page=${page}&limit=${limit}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    currentPage = page;
+
     return response.data.data;
   } catch (error) {
     console.log(error);
@@ -41,16 +48,21 @@ const getData = async () => {
 };
 
 const display = (data) => {
+  const ul = document.querySelector("ul");
+  ul.innerHTML = "";
+
   data.forEach((item) => {
-    const ul = document.querySelector("ul");
     const li = document.createElement("li");
     const deleteButton = document.createElement("button");
+
     deleteButton.textContent = "Delete Button";
     deleteButton.onclick = () => {
       deleteExpense(item.id, li);
     };
-    li.textContent = `${item.amount} -  ${item.description} - ${item.category} - `;
+
+    li.textContent = `${item.amount} - ${item.description} - ${item.category} - `;
     li.appendChild(deleteButton);
+
     ul.appendChild(li);
   });
 };
@@ -105,6 +117,33 @@ const deleteExpense = async (id, li) => {
   }
 };
 
+const showPagination = (pagination) => {
+  const div = document.getElementById("pagination");
+  div.innerHTML = "";
+
+  if (pagination.hasPreviousPage) {
+    const prev = document.createElement("button");
+    prev.innerText = "Previous";
+    prev.onclick = async () => {
+      const response = await getData(pagination.previousPage);
+      display(response.expenses);
+      showPagination(response.pagination);
+    };
+    div.appendChild(prev);
+  }
+
+  if (pagination.hasNextPage) {
+    const next = document.createElement("button");
+    next.innerText = "Next";
+    next.onclick = async () => {
+      const response = await getData(pagination.nextPage);
+      display(response.expenses);
+      showPagination(response.pagination);
+    };
+    div.appendChild(next);
+  }
+};
+
 const handlepayments = () => {
   return (window.location.href = "../payments/payments.html");
 };
@@ -113,6 +152,8 @@ const handleDayByDayExpenses = () => {
 };
 
 window.onload = async () => {
-  const expenses = await getData();
-  display(expenses);
+  const response = await getData();
+
+  display(response.expenses);
+  showPagination(response.pagination);
 };

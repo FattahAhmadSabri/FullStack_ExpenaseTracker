@@ -57,7 +57,7 @@ const addExpenseService = async (amount, description, userId) => {
 
 const getExpenseService = async (page, limit) => {
   page = Number(page) || 1;
-  limit = Number(limit) || 5;
+  limit = Number(limit);
 
   const offset = (page - 1) * limit;
 
@@ -70,7 +70,7 @@ const getExpenseService = async (page, limit) => {
   const totalPages = Math.ceil(result.count / limit);
 
   return {
-    expenses: result.rows,   // Actual expense records
+    expenses: result.rows, 
     pagination: {
       currentPage: page,
       totalPages,
@@ -202,15 +202,15 @@ const monthlyExpenseAndIncomeReportService = async (userId) => {
 
   const totalIncome = Number(result.totalIncome) || 0;
   const totalExpense = Number(result.totalExpense) || 0;
- const monthName = start.toLocaleString("en-US", {
-  month: "long",
-});
+  const monthName = start.toLocaleString("en-US", {
+    month: "long",
+  });
   return {
     month: monthName,
-  year: start.getFullYear(),
-  totalIncome,
-  totalExpense,
-  savings: totalIncome - totalExpense,
+    year: start.getFullYear(),
+    totalIncome,
+    totalExpense,
+    savings: totalIncome - totalExpense,
   };
 };
 

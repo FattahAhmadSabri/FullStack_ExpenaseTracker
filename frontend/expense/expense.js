@@ -27,17 +27,21 @@ const handleExpense = async (event) => {
 };
 
 let currentPage = 1;
-let limit = 5;
 
 const getData = async (page = currentPage) => {
   const token = localStorage.getItem("token");
-  limit = document.getElementById("limit").value;
+  const savedLimit = localStorage.getItem("limit") || 5;
+  document.getElementById("limit").value = savedLimit;
+
   try {
-    const response = await axios.get(`${api}?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.get(
+      `${api}?page=${page}&limit=${savedLimit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     currentPage = page;
 
@@ -104,14 +108,18 @@ const handleLeaderboard = async () => {
 
 const deleteExpense = async (id, li) => {
   const token = localStorage.getItem("token");
+
   try {
-    const response = await axios.delete(`${api}/${id}`, {
+    await axios.delete(`${api}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(response);
-    li.remove();
+
+    const response = await getData();
+
+    display(response.expenses);
+    showPagination(response.pagination);
   } catch (error) {
     console.log(error);
   }
@@ -150,6 +158,17 @@ const handlepayments = () => {
 const handleDayByDayExpenses = () => {
   return (window.location.href = "./dayByDayExpense.html");
 };
+
+document.getElementById("limit").addEventListener("change", async (e) => {
+  localStorage.setItem("limit", e.target.value);
+
+  currentPage = 1;
+
+  const response = await getData();
+
+  display(response.expenses);
+  showPagination(response.pagination);
+});
 
 window.onload = async () => {
   const response = await getData();

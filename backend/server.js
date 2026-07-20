@@ -23,7 +23,7 @@ app.use("/", paymentsRoutes);
 app.use("/", emailRoutes);
 
 sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => {
     app.listen(port, () => {
       console.log("server connected");

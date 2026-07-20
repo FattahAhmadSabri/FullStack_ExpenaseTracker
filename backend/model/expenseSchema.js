@@ -22,6 +22,14 @@ const Expense = sequelize.define("expenses", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  income: {
+  type: DataTypes.INTEGER,
+  allowNull: true,
+  defaultValue: null,
+  validate: {
+    min: 0
+  },
+},
 });
 
 module.exports = Expense;

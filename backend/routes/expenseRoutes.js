@@ -4,6 +4,10 @@ const {
   getExpenseController,
   deleteExpenseController,
   getAllExpenseGroupByUserController,
+  getExpenseForPremiumMemberController,
+  updateIncomeController,
+  monthlyExpenseAndIncomeReportController
+  
 } = require("../controller/expenseController");
 const { inputGuardrail } = require("../middleware/guardrails");
 const authMiddleware = require("../middleware/authenticateMiddleware");
@@ -25,6 +29,18 @@ router.get(
   getAllExpenseGroupByUserController,
 );
 
+router.get(
+  "/expense/premium-monthly-report",
+  authMiddleware,
+  monthlyExpenseAndIncomeReportController
+);
+
+router.get(
+  "/expense/premiumexpense",
+  authMiddleware,
+  getExpenseForPremiumMemberController,
+);
+router.patch("/expense/:id", authMiddleware, updateIncomeController);
 router.delete("/expense/:id", authMiddleware, deleteExpenseController);
 
 module.exports = router;

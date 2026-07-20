@@ -27,11 +27,11 @@ const handleExpense = async (event) => {
 };
 
 let currentPage = 1;
-const limit = 5;
+let limit = 5;
 
 const getData = async (page = currentPage) => {
   const token = localStorage.getItem("token");
-
+  limit = document.getElementById("limit").value;
   try {
     const response = await axios.get(`${api}?page=${page}&limit=${limit}`, {
       headers: {

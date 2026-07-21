@@ -96,7 +96,7 @@ const updatePasswordService = async (resetId, password) => {
     const resetRequest = await ForgotPassword.findByPk(resetId, {
       transaction,
     });
-      console.log("Reset Request:", resetRequest?.toJSON());
+      
     if (!resetRequest) {
       throw new Error("Invalid reset link");
     }

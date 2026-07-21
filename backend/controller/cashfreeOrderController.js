@@ -32,8 +32,7 @@ const getOrderStatusCashfreeController = async (req, res) => {
     return successResponse(res, 201, "payment successfully", response);
   } catch (error) {
      console.log(error);
-  console.log(error.name);
-  console.log(error.message);
+ 
 
   
     return errorResponse(res, 500, error.message);

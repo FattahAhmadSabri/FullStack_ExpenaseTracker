@@ -1,17 +1,30 @@
+const path = require("path");
+const fs = require("fs");
+const https = require("https");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const compression = require("compression");
+const morgan = require("morgan")
 dotenv.config();
 const sequelize = require("./utils/dbConfig");
 const userRoutes = require("./routes/userRoutes");
+const {globalErrorHandler} = require("./middleware/responseHandle");
 const expenseRoutes = require("./routes/expenseRoutes");
 const paymentsRoutes = require("./routes/paymetsRoute");
 const emailRoutes = require("./routes/emailRoutes");
+const {globalLimiter} = require("./middleware/rateLimitingMiddleware")
 
 const app = express();
 const port = process.env.PORT || 4000;
+app.use(compression());
+app.use(morgan("combined"));
 app.use(express.json());
 app.use(cors());
+app.use(globalLimiter)
+app.use(globalErrorHandler);
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
 
 app.get("/", (req, res) => {
   res.status(200).json("expense working");
@@ -25,9 +38,11 @@ app.use("/", emailRoutes);
 sequelize
   .sync()
   .then(() => {
-    app.listen(port, () => {
-      console.log("server connected");
-    });
+    https
+      .createServer({ key: privateKey, cert: certificate }, app)
+      .listen(port, () => {
+        console.log("server connected");
+      });
   })
   .catch((error) => {
     console.log(error);

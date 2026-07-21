@@ -11,7 +11,6 @@ const handleLogin = async (event) => {
       email,
       password,
     });
-    console.log(response.data);
     event.target.reset();
   } catch (error) {
     console.log(error);

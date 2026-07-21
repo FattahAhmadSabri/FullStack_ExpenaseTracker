@@ -9,7 +9,6 @@ const sequelize = new Sequelize("expense_db", "root", "@SQL321", {
 async () => {
   try {
     const result = await sequelize.authenticate;
-    console.log(result);
   } catch (error) {
     console.log(error);
   }

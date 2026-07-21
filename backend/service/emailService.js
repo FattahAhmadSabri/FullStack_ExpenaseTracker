@@ -24,11 +24,11 @@ const sendEmail = async (to, subject, htmlContent) => {
     });
 
     console.log("Email Sent");
-    console.log(response);
+    
 
     return response;
   } catch (error) {
-    console.log(error);
+   
     throw error;
   }
 };

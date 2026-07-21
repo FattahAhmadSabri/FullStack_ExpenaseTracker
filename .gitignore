@@ -59,3 +59,10 @@ pnpm-lock.yaml
 
 # Misc
 *.tgz
+
+
+# production
+server.key
+server.cert
+backend/server.key
+backend/server.cert

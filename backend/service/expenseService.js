@@ -70,7 +70,7 @@ const getExpenseService = async (page, limit) => {
   const totalPages = Math.ceil(result.count / limit);
 
   return {
-    expenses: result.rows, 
+    expenses: result.rows,
     pagination: {
       currentPage: page,
       totalPages,
@@ -220,11 +220,7 @@ const updateExpenseIncomeService = async (id, userId, income) => {
   if (!user) {
     throw new Error("User not found");
   }
-  console.log({
-    id,
-    userId,
-    income,
-  });
+
   const updateIncome = await Expense.update(
     { income },
     {

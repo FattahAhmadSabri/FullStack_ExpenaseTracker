@@ -47,8 +47,6 @@ const createOrder = async (
     });
     return response.data;
   } catch (error) {
-    console.error("Cashfree Error:", error.response?.data || error.message);
-
     throw new Error(
       error.response?.data?.message || "Failed to create Cashfree order.",
     );
@@ -114,7 +112,7 @@ const getOrderStatus = async (orderId) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.error("Cashfree Error:", error.response?.data || error.message);
+
     throw error;
   }
 };

@@ -2,6 +2,7 @@ const { Expense, User } = require("../model/index");
 const { Op, fn, col } = require("sequelize");
 const sequelize = require("../utils/dbConfig");
 const { GoogleGenAI } = require("@google/genai");
+const {uploadUserData, downloadUserData} = require("../utils/txtS3")
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
@@ -45,6 +46,13 @@ const addExpenseService = async (amount, description, userId) => {
         transaction,
       },
     );
+    const user = await User.findByPk(userId, { transaction });
+  const userData = {
+  id: user.id,
+  totalExpense: user.totalExpense,
+  amount,
+};
+    await uploadUserData(userId, userData)
 
     await transaction.commit();
 

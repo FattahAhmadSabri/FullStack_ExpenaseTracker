@@ -61,7 +61,7 @@ pnpm-lock.yaml
 *.tgz
 
 
-# production
+# SSL Certificates
 server.key
 server.cert
 backend/server.key
